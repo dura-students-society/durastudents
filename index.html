@@ -18,6 +18,16 @@
 
   <link rel="icon" href="assets/logo.png" />
 
+  <!-- Apply saved theme before paint (no flash) -->
+  <script>
+    try {
+      const t = localStorage.getItem("theme");
+      if (t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
+      }
+    } catch (e) {}
+  </script>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -41,13 +51,12 @@
     }
 
     .hero-overlay {
-      background:
-        linear-gradient(
-          180deg,
-          rgba(0, 0, 0, 0.35) 0%,
-          rgba(0, 0, 0, 0.58) 55%,
-          rgba(0, 0, 0, 0.82) 100%
-        );
+      background: linear-gradient(
+        180deg,
+        rgba(5, 30, 15, 0.35) 0%,
+        rgba(5, 30, 15, 0.6) 55%,
+        rgba(3, 15, 8, 0.85) 100%
+      );
     }
 
     .glass {
@@ -58,6 +67,7 @@
     }
 
     .heritage-card {
+      border: 1px solid transparent;
       transition:
         transform 0.25s ease,
         box-shadow 0.25s ease,
@@ -67,11 +77,65 @@
     .heritage-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+      border-color: var(--accent);
     }
 
     .section-label {
       letter-spacing: 0.18em;
     }
+
+    /* =====================================================
+       THEME (green) — light / dark
+    ====================================================== */
+    :root {
+      --bg: #f3f8f4;
+      --surface: #ffffff;
+      --surface-2: #e6f0e8;
+      --deep: #0f2a1a;
+      --text: #13251a;
+      --muted: #4a6455;
+      --border: #cfe0d3;
+      --accent: #15803d;
+      --accent-hover: #166534;
+    }
+
+    html.dark {
+      --bg: #0a130e;
+      --surface: #101c15;
+      --surface-2: #162619;
+      --deep: #060d09;
+      --text: #e5f2e9;
+      --muted: #9bb3a3;
+      --border: #223629;
+      --accent: #4ade80;
+      --accent-hover: #86efac;
+    }
+
+    html .bg-stone-50  { background-color: var(--bg); }
+    html .bg-white     { background-color: var(--surface); }
+    html .bg-stone-100 { background-color: var(--surface-2); }
+    html .bg-stone-200 { background-color: var(--border); }
+    html .bg-stone-900,
+    html .bg-stone-950 { background-color: var(--deep); }
+
+    html .text-stone-900 { color: var(--text); }
+    html .text-stone-600,
+    html .text-stone-500,
+    html .text-stone-400 { color: var(--muted); }
+    html .border-stone-200,
+    html .border-stone-300 { border-color: var(--border); }
+
+    html body { background-color: var(--bg); color: var(--text); }
+
+    /* Green accents */
+    html .section-label { color: var(--accent); }
+    html .bg-stone-950 .section-label,
+    html .bg-stone-900 .section-label { color: #86efac; }
+    .heritage-card svg { color: var(--accent); }
+
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: var(--accent-hover); }
+    html.dark .btn-accent { color: #052e16; }
   </style>
 </head>
 
@@ -92,6 +156,7 @@
           src="assets/logo.png"
           alt="Dura Students Society logo"
           class="h-11 w-11 rounded-full object-contain"
+          onerror="this.style.visibility='hidden'"
         />
 
         <div>
@@ -113,13 +178,23 @@
         <a href="#contact" class="transition hover:text-white/70">Contact</a>
       </nav>
 
-      <button
-        id="menuButton"
-        class="rounded-lg border border-white/20 p-2 lg:hidden"
-        aria-label="Open menu"
-      >
-        <i data-lucide="menu"></i>
-      </button>
+      <div class="flex items-center gap-2">
+        <button
+          id="themeToggle"
+          class="rounded-lg border border-white/20 p-2"
+          aria-label="Toggle theme"
+        >
+          <i data-lucide="moon" id="themeIcon" class="h-5 w-5"></i>
+        </button>
+
+        <button
+          id="menuButton"
+          class="rounded-lg border border-white/20 p-2 lg:hidden"
+          aria-label="Open menu"
+        >
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile menu -->
@@ -189,7 +264,7 @@
           <div class="mt-9 flex flex-wrap gap-3">
             <a
               href="#about"
-              class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900 transition hover:bg-white/90"
+              class="btn-accent inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition"
             >
               Discover Dura
               <i data-lucide="arrow-down" class="h-4 w-4"></i>
@@ -640,72 +715,52 @@
 
           <div>
             <div class="text-4xl font-semibold">1,000+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Digital photographs
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Digital photographs</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">100+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Oral histories
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Oral histories</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">200+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Audio recordings
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Audio recordings</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">500+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Historical documents
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Historical documents</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">3,000+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Dura words
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Dura words</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">100+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Heritage places
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Heritage places</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">200+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              People documented
-            </div>
+            <div class="mt-2 text-sm text-stone-500">People documented</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">50+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Cultural practices
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Cultural practices</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">100+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Videos
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Videos</div>
           </div>
 
           <div>
             <div class="text-4xl font-semibold">20+</div>
-            <div class="mt-2 text-sm text-stone-500">
-              Podcast/documentaries
-            </div>
+            <div class="mt-2 text-sm text-stone-500">Podcast/documentaries</div>
           </div>
 
         </div>
@@ -948,7 +1003,7 @@
 
           <a
             href="mailto:contact@durastudentssociety.org"
-            class="inline-flex items-center gap-2 rounded-full bg-stone-950 px-7 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
+            class="btn-accent inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold transition"
           >
             Connect with us
             <i data-lucide="mail" class="h-4 w-4"></i>
@@ -989,6 +1044,7 @@
               src="assets/logo.png"
               alt="Dura Students Society"
               class="h-12 w-12 rounded-full"
+              onerror="this.style.visibility='hidden'"
             />
 
             <div>
@@ -1020,21 +1076,10 @@
 
           <div class="mt-5 flex flex-col gap-3 text-sm text-white/50">
 
-            <a href="#about" class="hover:text-white">
-              About
-            </a>
-
-            <a href="#heritage" class="hover:text-white">
-              Heritage
-            </a>
-
-            <a href="#language" class="hover:text-white">
-              Dura Language
-            </a>
-
-            <a href="#digital" class="hover:text-white">
-              Digital Heritage
-            </a>
+            <a href="#about" class="hover:text-white">About</a>
+            <a href="#heritage" class="hover:text-white">Heritage</a>
+            <a href="#language" class="hover:text-white">Dura Language</a>
+            <a href="#digital" class="hover:text-white">Digital Heritage</a>
 
           </div>
 
@@ -1049,21 +1094,10 @@
 
           <div class="mt-5 flex flex-col gap-3 text-sm text-white/50">
 
-            <a href="#" class="hover:text-white">
-              Facebook
-            </a>
-
-            <a href="#" class="hover:text-white">
-              Instagram
-            </a>
-
-            <a href="#" class="hover:text-white">
-              YouTube
-            </a>
-
-            <a href="#" class="hover:text-white">
-              Contact
-            </a>
+            <a href="#" class="hover:text-white">Facebook</a>
+            <a href="#" class="hover:text-white">Instagram</a>
+            <a href="#" class="hover:text-white">YouTube</a>
+            <a href="#" class="hover:text-white">Contact</a>
 
           </div>
 
@@ -1096,7 +1130,28 @@
   ========================================================== -->
 
   <script>
-    lucide.createIcons();
+    const root = document.documentElement;
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function renderThemeIcon() {
+      const dark = root.classList.contains("dark");
+      themeIcon.setAttribute("data-lucide", dark ? "sun" : "moon");
+      lucide.createIcons();
+    }
+
+    themeToggle.addEventListener("click", () => {
+      root.classList.toggle("dark");
+      try {
+        localStorage.setItem(
+          "theme",
+          root.classList.contains("dark") ? "dark" : "light"
+        );
+      } catch (e) {}
+      renderThemeIcon();
+    });
+
+    renderThemeIcon();
 
     const menuButton = document.getElementById("menuButton");
     const mobileMenu = document.getElementById("mobileMenu");
